@@ -6,7 +6,7 @@ Sets the project version to a timestamp and writes the version to a text file wh
 
 ## Usage
 
-The plugin is available on the official [Gradle plugin portal](https://plugins.gradle.org/).
+The plugin is available on the official [Gradle plugin portal](https://plugins.gradle.org/plugin/de.europace.gradle.artifact-version).
 It automatically configures all subprojects, so you only need to apply the plugin to your root Gradle project:
 
     plugins {
