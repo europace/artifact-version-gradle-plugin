@@ -3,10 +3,8 @@ package de.europace.gradle.artifactversion
 import org.gradle.api.Project
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
-import spock.lang.Unroll
+import spock.lang.TempDir
 
 import static de.europace.gradle.artifactversion.ArtifactVersionPlugin.CREATE_ARTIFACT_VERSION_FILE_TASK_NAME
 import static org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME
@@ -14,18 +12,18 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 class ArtifactVersionPluginSpec extends Specification {
 
-  @Rule
-  final TemporaryFolder testProjectDir = new TemporaryFolder()
+  @TempDir
+  File testProjectDir
 
-  final String PLUGIN_ID = "de.europace.gradle.artifact-version"
+  String PLUGIN_ID = "de.europace.gradle.artifact-version"
 
   private File buildFile
 
   def setup() {
-    buildFile = testProjectDir.newFile("build.gradle")
+    buildFile = new File(testProjectDir, "build.gradle")
+    buildFile.createNewFile()
   }
 
-  @Unroll
   def 'performs createArtifactVersionTask if "#taskName" is executed'() {
     given:
     buildFile << """
@@ -43,7 +41,7 @@ class ArtifactVersionPluginSpec extends Specification {
 
     when:
     def result = GradleRunner.create()
-        .withProjectDir(testProjectDir.root)
+        .withProjectDir(testProjectDir)
         .withPluginClasspath()
         .withArguments("logVersion", taskName)
         .forwardOutput()

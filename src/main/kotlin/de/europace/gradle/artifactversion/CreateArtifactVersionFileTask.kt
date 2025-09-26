@@ -1,15 +1,18 @@
 package de.europace.gradle.artifactversion
 
+import java.io.File
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 open class CreateArtifactVersionFileTask : DefaultTask() {
 
-  val versionFile: File
-    @OutputFile
-    get() = project.file(project.rootDir.toString() + "/" + project.name + "-version.txt")
+  @Input
+  lateinit var artifactVersion: String
+
+  @OutputFile
+  lateinit var versionFile: File
 
   init {
     this.description = "Writes the current artifact version to a text file in the project directory."
@@ -21,6 +24,6 @@ open class CreateArtifactVersionFileTask : DefaultTask() {
 
   @TaskAction
   fun action() {
-    versionFile.writeText(project.version as String)
+    versionFile.writeText(artifactVersion)
   }
 }

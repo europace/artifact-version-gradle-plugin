@@ -1,11 +1,11 @@
 package de.europace.gradle.artifactversion
 
+import java.time.LocalDateTime.now
+import java.time.format.DateTimeFormatter.ofPattern
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.plugins.PublishingPlugin
 import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME
-import java.time.LocalDateTime.now
-import java.time.format.DateTimeFormatter.ofPattern
 
 open class ArtifactVersionPlugin : Plugin<Project> {
 
@@ -23,8 +23,11 @@ open class ArtifactVersionPlugin : Plugin<Project> {
 
     project.pluginManager.apply(PublishingPlugin::class.java)
     project.afterEvaluate {
-      val versionFileTask = project.tasks.create(CREATE_ARTIFACT_VERSION_FILE_TASK_NAME, CreateArtifactVersionFileTask::class.java)
-      project.tasks.findByName(PUBLISH_LIFECYCLE_TASK_NAME)?.dependsOn(versionFileTask.name)
+      val versionFileTask = project.tasks.register(CREATE_ARTIFACT_VERSION_FILE_TASK_NAME, CreateArtifactVersionFileTask::class.java) {
+        it.artifactVersion = project.version as String
+        it.versionFile = project.layout.buildDirectory.file("${project.name}-version.txt").get().asFile
+      }
+      project.tasks.findByName(PUBLISH_LIFECYCLE_TASK_NAME)?.dependsOn(versionFileTask)
     }
   }
 

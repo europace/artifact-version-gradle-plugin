@@ -3,7 +3,6 @@ import java.time.format.DateTimeFormatter.ofPattern
 
 buildscript {
   repositories {
-    mavenLocal()
     mavenCentral()
     gradlePluginPortal()
   }
@@ -11,22 +10,25 @@ buildscript {
 
 plugins {
   groovy
-  id("org.jetbrains.kotlin.jvm") version "1.3.61"
   `maven-publish`
   `java-gradle-plugin`
-  id("com.gradle.plugin-publish") version "0.10.1"
-  id("com.github.ben-manes.versions") version "0.27.0"
+  id("org.jetbrains.kotlin.jvm") version "2.2.20"
+  id("com.gradle.plugin-publish") version "2.0.0"
 }
 
 group = "de.europace.gradle"
 version = now().format(ofPattern("yyyy-MM-dd\'T\'HH-mm-ss"))
 logger.lifecycle("version: $version")
 
-val dependencyVersions = listOf<String>(
+val dependencyVersions = listOf(
+    "org.junit:junit-bom:5.13.4"
 )
 
 val dependencyVersionsByGroup = mapOf(
-    "org.codehaus.groovy" to "2.5.9"
+    "org.codehaus.groovy" to "3.0.25",
+    "org.jetbrains.kotlin" to "2.2.20",
+    "org.junit.jupiter" to "5.13.4",
+    "org.junit.platform" to "1.13.4"
 )
 
 java {
@@ -34,19 +36,25 @@ java {
   targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+tasks.withType(Test::class) {
+  useJUnitPlatform()
+}
+
 repositories {
-  mavenLocal()
   mavenCentral()
 }
 
 dependencies {
   implementation(gradleApi())
   testImplementation(localGroovy())
-  testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
+  testImplementation("org.spockframework:spock-core:2.3-groovy-3.0")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
 }
 
 allprojects {
   configurations.all {
+    exclude(group = "org.codehaus.groovy")
     resolutionStrategy {
       failOnVersionConflict()
       force(dependencyVersions)
@@ -56,24 +64,21 @@ allprojects {
           useVersion(forcedVersion)
         }
       }
-      cacheDynamicVersionsFor(0, "seconds")
+      cacheDynamicVersionsFor(Integer.parseInt(System.getenv("GRADLE_CACHE_DYNAMIC_SECONDS") ?: "0"), "seconds")
     }
   }
 }
 
-pluginBundle {
-  website = "https://github.com/europace/artifact-version-gradle-plugin"
-  vcsUrl = "https://github.com/europace/artifact-version-gradle-plugin"
-  tags = listOf("artifact", "version", "publishing")
-}
-
 gradlePlugin {
+  website.set("https://github.com/europace/artifact-version-gradle-plugin")
+  vcsUrl.set("https://github.com/europace/artifact-version-gradle-plugin")
   plugins {
     create("artifactVersionPlugin") {
       id = "de.europace.gradle.artifact-version"
       displayName = "Plugin for consistent artifact version patterns"
       description = "Sets the project version to the current timestamp and writes the version to a text file when publishing artifacts"
       implementationClass = "de.europace.gradle.artifactversion.ArtifactVersionPlugin"
+      tags.set(setOf("artifact", "version", "publishing"))
     }
   }
 }
@@ -90,12 +95,5 @@ publishing {
         }
       }
     }
-  }
-}
-
-tasks {
-  wrapper {
-    gradleVersion = "5.6.3"
-    distributionType = Wrapper.DistributionType.ALL
   }
 }
