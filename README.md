@@ -13,6 +13,8 @@ It automatically configures all subprojects, so you only need to apply the plugi
       id("de.europace.gradle.artifact-version") version "..."
     }
 
+Since the first release in 2025 this plugin requires Java 17, before that Java 8 was sufficient.
+
 ## Contributing
 
 Please submit issues if you have any questions or suggestions regarding this plugin.
