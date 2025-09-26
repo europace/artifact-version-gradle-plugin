@@ -25,15 +25,15 @@ val dependencyVersions = listOf(
 )
 
 val dependencyVersionsByGroup = mapOf(
-    "org.codehaus.groovy" to "3.0.25",
+    "org.apache.groovy" to "4.0.28",
     "org.jetbrains.kotlin" to "2.2.20",
     "org.junit.jupiter" to "5.13.4",
     "org.junit.platform" to "1.13.4"
 )
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.withType(Test::class) {
@@ -48,13 +48,12 @@ dependencies {
   implementation(gradleApi())
   testImplementation(localGroovy())
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
-  testImplementation("org.spockframework:spock-core:2.3-groovy-3.0")
+  testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
 }
 
 allprojects {
   configurations.all {
-    exclude(group = "org.codehaus.groovy")
     resolutionStrategy {
       failOnVersionConflict()
       force(dependencyVersions)
@@ -95,5 +94,12 @@ publishing {
         }
       }
     }
+  }
+}
+
+tasks {
+  wrapper {
+    gradleVersion = "9.1.0"
+    distributionType = Wrapper.DistributionType.ALL
   }
 }

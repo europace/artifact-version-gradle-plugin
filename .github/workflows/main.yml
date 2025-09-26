@@ -13,7 +13,7 @@ jobs:
           uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # 5.0.0
           with:
             distribution: 'corretto'
-            java-version: 1.8
+            java-version: 17
             cache: 'gradle'
         - name: Clean build
           run: ./gradlew clean build --info --stacktrace
