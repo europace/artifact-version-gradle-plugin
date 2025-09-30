@@ -25,7 +25,7 @@ open class ArtifactVersionPlugin : Plugin<Project> {
     project.afterEvaluate {
       val versionFileTask = project.tasks.register(CREATE_ARTIFACT_VERSION_FILE_TASK_NAME, CreateArtifactVersionFileTask::class.java) {
         it.artifactVersion = project.version as String
-        it.versionFile = project.layout.buildDirectory.file("${project.name}-version.txt").get().asFile
+        it.versionFile = project.rootDir.resolve("${project.name}-version.txt")
       }
       project.tasks.findByName(PUBLISH_LIFECYCLE_TASK_NAME)?.dependsOn(versionFileTask)
     }
