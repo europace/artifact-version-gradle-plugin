@@ -24,7 +24,7 @@ class ArtifactVersionPluginSpec extends Specification {
     buildFile.createNewFile()
   }
 
-  def 'performs createArtifactVersionTask if "#taskName" is executed'() {
+  def "performs createArtifactVersionTask if \"#taskName\" is executed"() {
     given:
     buildFile << """
         plugins {
@@ -62,6 +62,31 @@ class ArtifactVersionPluginSpec extends Specification {
 
     where:
     taskName << [CREATE_ARTIFACT_VERSION_FILE_TASK_NAME, PUBLISH_LIFECYCLE_TASK_NAME]
+  }
+
+  def "creates version file in project root directory"() {
+    given:
+    def buildFile = new File(testProjectDir, "build.gradle")
+    buildFile << """
+      plugins {
+        id 'de.europace.gradle.artifact-version'
+      }
+    """
+
+    when:
+    GradleRunner.create()
+        .withProjectDir(testProjectDir)
+        .withPluginClasspath()
+        .withArguments("createArtifactVersionFile")
+        .build()
+
+    then:
+    def versionFile = new File(testProjectDir, "${testProjectDir.name}-version.txt")
+    versionFile.exists()
+    new File(testProjectDir, "${testProjectDir.name}-version.txt").exists()
+
+    and:
+    !new File(testProjectDir, "build/${testProjectDir.name}-version.txt").exists()
   }
 
   String getLoggedValue(BuildResult result, String needle) {
