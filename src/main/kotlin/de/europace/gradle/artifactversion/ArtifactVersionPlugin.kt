@@ -14,17 +14,27 @@ open class ArtifactVersionPlugin : Plugin<Project> {
       project.logger.warn("This plugin should only be applied to the root project")
     }
 
-    val artifactVersion = now().format(ofPattern("yyyy-MM-dd\'T\'HH-mm-ss"))
+    val extension = project.extensions.create("artifactVersion", ArtifactVersionExtension::class.java)
 
+    val timestamp = now()
+    val defaultVersion = timestamp.format(ofPattern("yyyy-MM-dd\'T\'HH-mm-ss"))
     project.allprojects {
-      it.logger.info("Setting version " + artifactVersion + " to project " + it.path)
-      it.version = artifactVersion
+      it.logger.info("Setting version " + defaultVersion + " to project " + it.path)
+      it.version = defaultVersion
     }
 
     project.pluginManager.apply(PublishingPlugin::class.java)
     project.afterEvaluate {
+      val artifactVersion = if (extension.numericFormat.get()) {
+        timestamp.format(ofPattern("yyyyMMddHHmmss")).also { v ->
+          project.allprojects { it.version = v }
+        }
+      } else {
+        defaultVersion
+      }
+
       val versionFileTask = project.tasks.register(CREATE_ARTIFACT_VERSION_FILE_TASK_NAME, CreateArtifactVersionFileTask::class.java) {
-        it.artifactVersion = project.version as String
+        it.artifactVersion = artifactVersion
         it.versionFile = project.rootDir.resolve("${project.name}-version.txt")
       }
       project.tasks.findByName(PUBLISH_LIFECYCLE_TASK_NAME)?.dependsOn(versionFileTask)
