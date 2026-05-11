@@ -89,6 +89,93 @@ class ArtifactVersionPluginSpec extends Specification {
     !new File(testProjectDir, "build/${testProjectDir.name}-version.txt").exists()
   }
 
+  def "default version format is dashed timestamp"() {
+    given:
+    buildFile << """
+        plugins {
+            id '${PLUGIN_ID}'
+        }
+
+        task logVersion {
+           doFirst {
+               logger.lifecycle("LOG_VERSION: \${project.version}")
+           }
+        }
+    """
+
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir)
+        .withPluginClasspath()
+        .withArguments("logVersion")
+        .forwardOutput()
+        .build()
+
+    then:
+    def projectVersion = getLoggedValue(result, "LOG_VERSION: ")
+    projectVersion ==~ /\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}/
+  }
+
+  def "numeric format produces pure numeric timestamp"() {
+    given:
+    buildFile << """
+        plugins {
+            id '${PLUGIN_ID}'
+        }
+
+        artifactVersion {
+            numericFormat = true
+        }
+
+        task logVersion {
+           doFirst {
+               logger.lifecycle("LOG_VERSION: \${project.version}")
+           }
+        }
+    """
+
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir)
+        .withPluginClasspath()
+        .withArguments("logVersion")
+        .forwardOutput()
+        .build()
+
+    then:
+    def projectVersion = getLoggedValue(result, "LOG_VERSION: ")
+    projectVersion ==~ /\d{14}/
+  }
+
+  def "numeric format version is written to version file"() {
+    given:
+    buildFile << """
+        plugins {
+            id '${PLUGIN_ID}'
+        }
+
+        artifactVersion {
+            numericFormat = true
+        }
+    """
+
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir)
+        .withPluginClasspath()
+        .withArguments("createArtifactVersionFile")
+        .forwardOutput()
+        .build()
+
+    then:
+    result.task(":${CREATE_ARTIFACT_VERSION_FILE_TASK_NAME}").outcome == SUCCESS
+
+    and:
+    def versionFile = new File(testProjectDir, "${testProjectDir.name}-version.txt")
+    versionFile.exists()
+    versionFile.readLines().find { it ==~ /\d{14}/ }
+  }
+
   String getLoggedValue(BuildResult result, String needle) {
     return result.output.readLines().find { it.contains(needle) }.substring(needle.length()).trim()
   }
