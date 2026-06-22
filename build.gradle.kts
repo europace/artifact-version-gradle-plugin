@@ -19,7 +19,7 @@ plugins {
 }
 
 group = "de.europace.gradle"
-version = now().format(ofPattern("yyyy-MM-dd\'T\'HH-mm-ss"))
+version = now().format(ofPattern("yyyyMMddHHmmss"))
 logger.lifecycle("version: $version")
 
 val dependencyVersions = listOf(
