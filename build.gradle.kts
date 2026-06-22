@@ -27,8 +27,8 @@ val dependencyVersions = listOf(
 )
 
 val dependencyVersionsByGroup = mapOf(
-    "org.apache.groovy" to "4.0.28",
-    "org.jetbrains.kotlin" to "2.2.20",
+    "org.apache.groovy" to "4.0.32",
+    "org.jetbrains.kotlin" to "2.4.0",
     "org.junit.jupiter" to junitVersion,
     "org.junit.platform" to junitVersion
 )
