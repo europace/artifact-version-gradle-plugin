@@ -15,7 +15,7 @@ plugins {
   `maven-publish`
   `java-gradle-plugin`
   id("org.jetbrains.kotlin.jvm") version "2.2.20"
-  id("com.gradle.plugin-publish") version "2.0.0"
+  id("com.gradle.plugin-publish") version "2.1.1"
 }
 
 group = "de.europace.gradle"
