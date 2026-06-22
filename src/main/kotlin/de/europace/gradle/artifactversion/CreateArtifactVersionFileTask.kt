@@ -5,7 +5,9 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 
+@DisableCachingByDefault(because = "Always runs to reflect the current artifact version")
 open class CreateArtifactVersionFileTask : DefaultTask() {
 
   @Input
