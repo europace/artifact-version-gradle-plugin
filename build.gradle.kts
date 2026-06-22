@@ -28,7 +28,7 @@ val dependencyVersionsByGroup = mapOf(
     "org.apache.groovy" to "4.0.28",
     "org.jetbrains.kotlin" to "2.2.20",
     "org.junit.jupiter" to "5.13.4",
-    "org.junit.platform" to "1.13.4"
+    "org.junit.platform" to "6.1.0"
 )
 
 java {
@@ -55,7 +55,7 @@ dependencies {
   testImplementation(localGroovy())
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
   testImplementation("org.spockframework:spock-core:2.4-groovy-4.0")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
 }
 
 allprojects {
