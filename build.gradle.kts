@@ -23,7 +23,7 @@ version = now().format(ofPattern("yyyy-MM-dd\'T\'HH-mm-ss"))
 logger.lifecycle("version: $version")
 
 val dependencyVersions = listOf(
-    "org.junit:junit-bom:6.1.0"
+    "org.junit:junit-bom:${junitVersion}"
 )
 
 val dependencyVersionsByGroup = mapOf(
@@ -56,7 +56,7 @@ dependencies {
   implementation(gradleApi())
   testImplementation(localGroovy())
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-  testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
+  testImplementation("org.spockframework:spock-core:2.4-groovy-4.0")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:${junitVersion}")
 }
 
