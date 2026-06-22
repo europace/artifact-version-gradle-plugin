@@ -1,6 +1,8 @@
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ofPattern
 
+val junitVersion = "6.1.0"
+
 buildscript {
   repositories {
     mavenCentral()
@@ -27,8 +29,8 @@ val dependencyVersions = listOf(
 val dependencyVersionsByGroup = mapOf(
     "org.apache.groovy" to "4.0.28",
     "org.jetbrains.kotlin" to "2.2.20",
-    "org.junit.jupiter" to "6.1.0",
-    "org.junit.platform" to "1.13.4"
+    "org.junit.jupiter" to junitVersion,
+    "org.junit.platform" to junitVersion
 )
 
 java {
@@ -53,9 +55,9 @@ repositories {
 dependencies {
   implementation(gradleApi())
   testImplementation(localGroovy())
-  testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.0")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher:${junitVersion}")
 }
 
 allprojects {
