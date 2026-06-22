@@ -14,7 +14,7 @@ plugins {
   groovy
   `maven-publish`
   `java-gradle-plugin`
-  id("org.jetbrains.kotlin.jvm") version "2.2.20"
+  id("org.jetbrains.kotlin.jvm") version "2.4.0"
   id("com.gradle.plugin-publish") version "2.1.1"
 }
 
@@ -27,8 +27,8 @@ val dependencyVersions = listOf(
 )
 
 val dependencyVersionsByGroup = mapOf(
-    "org.apache.groovy" to "4.0.28",
-    "org.jetbrains.kotlin" to "2.2.20",
+    "org.apache.groovy" to "4.0.32",
+    "org.jetbrains.kotlin" to "2.4.0",
     "org.junit.jupiter" to junitVersion,
     "org.junit.platform" to junitVersion
 )
