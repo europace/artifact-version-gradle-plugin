@@ -14,7 +14,7 @@ plugins {
   groovy
   `maven-publish`
   `java-gradle-plugin`
-  id("org.jetbrains.kotlin.jvm") version "2.4.0"
+  id("org.jetbrains.kotlin.jvm") version "2.4.10"
   id("com.gradle.plugin-publish") version "2.1.1"
 }
 
