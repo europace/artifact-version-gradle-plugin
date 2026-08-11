@@ -1,7 +1,7 @@
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ofPattern
 
-val junitVersion = "6.1.2"
+val junitVersion = "6.1.3"
 
 buildscript {
   repositories {
